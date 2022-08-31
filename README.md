@@ -4,7 +4,7 @@ With this library you can manage and manipulate files and folder paths easily an
 You can use it in **Web,Android,Desktop,Console** projects with Kotlin/Java support.
 </br>
 You need JDK-17 to use this library.
-More details about futures is already shown in the source code.
+More details about futures is in the source code.
 </br>
 
 -----------
