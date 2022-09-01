@@ -16,7 +16,6 @@ import java.nio.file.Paths
  */
 class PathUtils(var checkPath: Boolean = false, var dotEnabled: Boolean = false, var pathNotFound: String = "null") {
     private val currentPath: String = System.getProperty("user.dir"); /* current path where this program executed*/
-    private val emptyString: String = ""
 
     /**
      * Gets the path of file or folder.
@@ -27,7 +26,7 @@ class PathUtils(var checkPath: Boolean = false, var dotEnabled: Boolean = false,
         val input = File(name)
 
         if (name == ".") {
-            getDotResult()
+            return getDotResult()
         }
 
         if (checkPath) {
@@ -49,7 +48,7 @@ class PathUtils(var checkPath: Boolean = false, var dotEnabled: Boolean = false,
         val input = File(path)
 
         if (path == ".") {
-            getDotResult()
+            return getDotResult()
         }
 
         if (checkPath) {
@@ -72,7 +71,7 @@ class PathUtils(var checkPath: Boolean = false, var dotEnabled: Boolean = false,
         val input = File(path)
 
         if (path == ".") {
-            getDotResult()
+            return getDotResult()
         }
 
         if (checkPath) {
@@ -95,7 +94,7 @@ class PathUtils(var checkPath: Boolean = false, var dotEnabled: Boolean = false,
         val input = File(path)
 
         if (path == ".") {
-            getDotResult()
+            return getDotResult()
         }
 
         if (checkPath) {
@@ -115,19 +114,22 @@ class PathUtils(var checkPath: Boolean = false, var dotEnabled: Boolean = false,
      */
     fun getParentName(path: String): String {
         val input = File(path)
+        var rs: String? = null
 
         if (path == ".") {
-            getDotResult()
+            return getDotResult()
+        } else if (File.listRoots().contains(File(path))) { /* If file is the root of system (unix is / and windows is drives) */
+            return path
         }
 
         if (checkPath) {
             return when (input.exists()) {
-                true -> Paths.get(input.absolutePath).parent.fileName.toString()
+                true -> FilenameUtils.getName(input.absoluteFile.parentFile.absolutePath)
                 false -> pathNotFound
             }
         }
 
-        return Paths.get(input.absolutePath).parent.fileName.toString();
+        return FilenameUtils.getName(input.absoluteFile.parentFile.absolutePath)
     }
 
     /**
@@ -140,17 +142,19 @@ class PathUtils(var checkPath: Boolean = false, var dotEnabled: Boolean = false,
         val input = File(path)
 
         if (path == ".") {
-            getDotResult()
+            return getDotResult()
+        } else if (File.listRoots().contains(File(path))) { /* If file is the root of system (unix is / and windows is drives) */
+            return path
         }
 
         if (checkPath) {
             return when (input.exists()) {
-                true -> Paths.get(input.absolutePath).getParent().toRealPath(LinkOption.NOFOLLOW_LINKS).toString()
+                true -> Paths.get(input.absolutePath).parent.toRealPath(LinkOption.NOFOLLOW_LINKS).toString()
                 false -> pathNotFound
             }
         }
 
-        return Paths.get(input.absolutePath).getParent().toRealPath(LinkOption.NOFOLLOW_LINKS).toString()
+        return Paths.get(input.absolutePath).parent.toRealPath(LinkOption.NOFOLLOW_LINKS).toString()
     }
 
     /**
@@ -165,7 +169,7 @@ class PathUtils(var checkPath: Boolean = false, var dotEnabled: Boolean = false,
         else File(FilenameUtils.normalize(File(path).absolutePath, true))
 
         if (path == ".") {
-            getDotResult()
+            return getDotResult()
         }
 
         if (checkPath) {
